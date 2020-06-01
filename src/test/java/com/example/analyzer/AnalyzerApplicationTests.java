@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 
 @SpringBootTest
@@ -16,7 +15,7 @@ class AnalyzerApplicationTests {
      */
     @Test
     void useSystemDictionaryBreakSentence() {
-        String line = "ilikesamsungmobilesamsung";
+        String line = "ilikesamsungmobile";
         Dictionary dictionary = Dictionary.getInstance();
         System.out.println("Input:");
         System.out.println(line);

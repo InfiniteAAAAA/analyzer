@@ -21,7 +21,7 @@ public class Dictionary {
         systemDic.add("like");
         systemDic.add("sam");
         systemDic.add("sung");
-        systemDic.add("samsung");
+        systemDic.add("samsungmobile");
         systemDic.add("mobile");
         systemDic.add("ice");
         systemDic.add("cream");
@@ -97,27 +97,32 @@ public class Dictionary {
                     if (dic.contains(substring)) {
                         wordList.add(substring);
                         lastIndex = endIndex;
+                        break;
                     }
                 }
             }
         }
-        List<String> finalList = new ArrayList<>();
-        while(wordList.stream().collect(Collectors.joining("")).length()>sentence.length()) {
-            for (int i = 0; i < wordList.size(); i++) {
-                if (wordList.get(i+1).length()>wordList.get(i).length()
-                        && wordList.get(i+1).startsWith(wordList.get(i))) {
-                    String replaceWord = wordList.get(i+1).substring(wordList.get(i).length());
-                    List<String> otherGroupWord = new ArrayList<>();
-                    otherGroupWord.addAll(wordList);
-                    wordList.remove(wordList.get(i));
-                    Collections.replaceAll(otherGroupWord,otherGroupWord.get(i+1),replaceWord);
-                    finalList.add("\n");
-                    finalList.addAll(otherGroupWord);
-                    break;
-                }
+        List<List<String>> finalList = new ArrayList<>();
+        finalList.add(wordList);
+
+        //判断连词情况
+        for (int i = 0; i < wordList.size()-1; i++) {
+            //a,b,c,d
+            String firstWord = wordList.get(i);
+            String secondWord = wordList.get(i+1);
+            StringBuffer stringBuffer = new StringBuffer();
+            String word = stringBuffer.append(firstWord).append(secondWord).toString();
+            //存在连词情况
+            if (dic.contains(word)) {
+                List<String> otherWordList = new ArrayList<>();
+                otherWordList.addAll(wordList);
+                otherWordList.remove(i);
+                otherWordList.add(i,word);
+                otherWordList.remove(i+1);
+
             }
         }
-        return finalList;
+        return wordList;
     }
 
     public static void main(String[] args) {
