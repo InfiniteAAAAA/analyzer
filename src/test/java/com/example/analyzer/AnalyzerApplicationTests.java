@@ -15,7 +15,7 @@ class AnalyzerApplicationTests {
      */
     @Test
     void useSystemDictionaryBreakSentence() {
-        String line = "ilikesamsungmobile";
+        String line = "ilikesamsungmobilesamsung";
         Dictionary dictionary = Dictionary.getInstance();
         System.out.println("Input:");
         System.out.println(line);

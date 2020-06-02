@@ -21,7 +21,7 @@ public class Dictionary {
         systemDic.add("like");
         systemDic.add("sam");
         systemDic.add("sung");
-        systemDic.add("samsungmobile");
+        systemDic.add("samsung");
         systemDic.add("mobile");
         systemDic.add("ice");
         systemDic.add("cream");
@@ -104,34 +104,48 @@ public class Dictionary {
         }
         List<List<String>> finalList = new ArrayList<>();
         finalList.add(wordList);
-
+        //连词的位置和值
+        List<MergeWordDTO> mergeWordList = new ArrayList<>();
         //判断连词情况
         for (int i = 0; i < wordList.size()-1; i++) {
             //a,b,c,d
             String firstWord = wordList.get(i);
             String secondWord = wordList.get(i+1);
             StringBuffer stringBuffer = new StringBuffer();
-            String word = stringBuffer.append(firstWord).append(secondWord).toString();
-            //存在连词情况
-            if (dic.contains(word)) {
-                List<String> otherWordList = new ArrayList<>();
-                otherWordList.addAll(wordList);
-                otherWordList.remove(i);
-                otherWordList.add(i,word);
-                otherWordList.remove(i+1);
-
+            String mergeWord = stringBuffer.append(firstWord).append(secondWord).toString();
+            //存在连词情况，记录起来
+            if (dic.contains(mergeWord)) {
+                mergeWordList.add(new MergeWordDTO(i,firstWord,mergeWord));
             }
         }
+        //
+        for (int i = 0; i < mergeWordList.size(); i++) {
+            MergeWordDTO mergeWordDTO = mergeWordList.get(i);
+            for (int j = 0; j < 2; j++) {
+                List<String> otherWordList = new ArrayList<>();
+                otherWordList.addAll(wordList);
+                //偶数
+                if (j % 2 == 0) {
+                    continue;
+                }
+                else {
+                    otherWordList.set(mergeWordDTO.getIndex(),mergeWordDTO.getMergeWord());
+                    otherWordList.remove(mergeWordDTO.getIndex()+1);
+                }
+                finalList.add(otherWordList);
+            }
+        }
+        finalList.stream().forEach(x -> {
+
+            String collect = x.stream().collect(Collectors.joining(" "));
+            System.out.println(collect);
+
+        });
         return wordList;
     }
 
     public static void main(String[] args) {
-        String a = "sam";
-        String b = "samsung";
-        boolean contains = b.contains(a);
-        System.out.println(contains);
-        String substring = b.substring(a.length());
-        System.out.println(substring);
+        System.out.println(0 % 2 == 0);
     }
 
 }
