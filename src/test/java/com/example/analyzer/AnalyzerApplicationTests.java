@@ -15,13 +15,11 @@ class AnalyzerApplicationTests {
      */
     @Test
     void useSystemDictionaryBreakSentence() {
-        String line = "ilikesamsungmobilesamsung";
+        String line = "ilikesamsungmobile";
         Dictionary dictionary = Dictionary.getInstance();
         System.out.println("Input:");
         System.out.println(line);
-        List<String> wordList = dictionary.breakSentence(line, "system");
-        String sentence = wordList.stream().collect(Collectors.joining(" "));
         System.out.println("Output:");
-        System.out.println(sentence);
+        dictionary.breakSentence(line, "system");
     }
 }

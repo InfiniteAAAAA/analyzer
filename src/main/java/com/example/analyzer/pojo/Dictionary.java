@@ -68,7 +68,7 @@ public class Dictionary {
      * @param flag system: use system dictionary, user: use user dictionary, both: use both dictionary
      * @return
      */
-    public List<String> breakSentence(String sentence,String flag) {
+    public void breakSentence(String sentence,String flag) {
         List<String> wordList = new ArrayList<>();
         Set<String> dic = null;
         //use system dictionary
@@ -111,37 +111,24 @@ public class Dictionary {
             //a,b,c,d
             String firstWord = wordList.get(i);
             String secondWord = wordList.get(i+1);
-            StringBuffer stringBuffer = new StringBuffer();
-            String mergeWord = stringBuffer.append(firstWord).append(secondWord).toString();
+            StringBuffer mergeWordBuffer = new StringBuffer();
+            StringBuffer separateWordBuffer = new StringBuffer();
+            String mergeWord = mergeWordBuffer.append(firstWord).append(secondWord).toString();
+            String separateWord = separateWordBuffer.append(firstWord).append(" ").append(secondWord).toString();
             //存在连词情况，记录起来
             if (dic.contains(mergeWord)) {
-                mergeWordList.add(new MergeWordDTO(i,firstWord,mergeWord));
-            }
-        }
-        //
-        for (int i = 0; i < mergeWordList.size(); i++) {
-            MergeWordDTO mergeWordDTO = mergeWordList.get(i);
-            for (int j = 0; j < 2; j++) {
                 List<String> otherWordList = new ArrayList<>();
                 otherWordList.addAll(wordList);
-                //偶数
-                if (j % 2 == 0) {
-                    continue;
-                }
-                else {
-                    otherWordList.set(mergeWordDTO.getIndex(),mergeWordDTO.getMergeWord());
-                    otherWordList.remove(mergeWordDTO.getIndex()+1);
-                }
+                otherWordList.add(i,mergeWord);
+                otherWordList.remove(i+1);
                 finalList.add(otherWordList);
             }
         }
         finalList.stream().forEach(x -> {
-
             String collect = x.stream().collect(Collectors.joining(" "));
             System.out.println(collect);
 
         });
-        return wordList;
     }
 
     public static void main(String[] args) {
