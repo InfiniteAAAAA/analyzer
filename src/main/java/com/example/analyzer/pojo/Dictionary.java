@@ -1,7 +1,6 @@
 package com.example.analyzer.pojo;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Dictionary {
     /**
@@ -50,6 +49,22 @@ public class Dictionary {
         return SingletonEnum.INSTANCE.getInstance();
     }
 
+    public static Set<String> getSystemDic() {
+        return systemDic;
+    }
+
+    public static void setSystemDic(Set<String> systemDic) {
+        Dictionary.systemDic = systemDic;
+    }
+
+    public static Set<String> getUserDic() {
+        return userDic;
+    }
+
+    public static void setUserDic(Set<String> userDic) {
+        Dictionary.userDic = userDic;
+    }
+
     /**
      * add some words to user dictionary
      * @param words
@@ -65,26 +80,11 @@ public class Dictionary {
     /**
      * use system dictionary to break the sentence
      * @param sentence
-     * @param flag system: use system dictionary, user: use user dictionary, both: use both dictionary
      * @return
      */
-    public void breakSentence(String sentence,String flag) {
+    public List<List<String>> breakSentence(String sentence,Set<String> dic) {
+        List<List<String>> finalList = new ArrayList<>();
         List<String> wordList = new ArrayList<>();
-        Set<String> dic = null;
-        //use system dictionary
-        if ("system".equals(flag)) {
-            dic = systemDic;
-        }
-        //use user dictionary
-        else if ("user".equals(flag)) {
-            dic = userDic;
-        }
-        //use both dictionary
-        else if ("both".equals(flag)) {
-            systemDic.removeAll(userDic);
-            systemDic.addAll(userDic);
-            dic = systemDic;
-        }
         int lastIndex = 1;
         for (int startIndex = 0; startIndex < sentence.length()-1; startIndex++) {
             if (startIndex!=0
@@ -102,37 +102,25 @@ public class Dictionary {
                 }
             }
         }
-        List<List<String>> finalList = new ArrayList<>();
         finalList.add(wordList);
-        //连词的位置和值
-        List<MergeWordDTO> mergeWordList = new ArrayList<>();
+
         //判断连词情况
         for (int i = 0; i < wordList.size()-1; i++) {
             //a,b,c,d
             String firstWord = wordList.get(i);
             String secondWord = wordList.get(i+1);
-            StringBuffer mergeWordBuffer = new StringBuffer();
-            StringBuffer separateWordBuffer = new StringBuffer();
-            String mergeWord = mergeWordBuffer.append(firstWord).append(secondWord).toString();
-            String separateWord = separateWordBuffer.append(firstWord).append(" ").append(secondWord).toString();
-            //存在连词情况，记录起来
-            if (dic.contains(mergeWord)) {
+            StringBuffer stringBuffer = new StringBuffer();
+            String word = stringBuffer.append(firstWord).append(secondWord).toString();
+            //存在连词情况
+            if (dic.contains(word)) {
                 List<String> otherWordList = new ArrayList<>();
                 otherWordList.addAll(wordList);
-                otherWordList.add(i,mergeWord);
+                otherWordList.remove(i);
+                otherWordList.add(i,word);
                 otherWordList.remove(i+1);
                 finalList.add(otherWordList);
             }
         }
-        finalList.stream().forEach(x -> {
-            String collect = x.stream().collect(Collectors.joining(" "));
-            System.out.println(collect);
-
-        });
+        return finalList;
     }
-
-    public static void main(String[] args) {
-        System.out.println(0 % 2 == 0);
-    }
-
 }
